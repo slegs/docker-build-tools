@@ -1,0 +1,8 @@
+# Build tools for docker file and git
+
+* Updates Dockerfile
+* Pushes to Docker repository
+* Updates Git source control
+* Inclues versioning
+
+
