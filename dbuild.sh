@@ -32,7 +32,7 @@ EOM
 
 
 #Show the current directory
-echo "Directory=$PWD"
+echo "Docker Build Directory=$PWD"
 
 #DEFAULT TO DEV WITH NO RUN
 TYPE="DEV"
@@ -65,8 +65,6 @@ while getopts ":u:v:t:i:rh" opt; do
     ;;
   esac
 done
-
-echo "-u $USERNAME -v $VERSION -t $TYPE -i $IMAGE -r $RUN_BUILD"
 
 #Check Mandatory Options
 if [ "x" == "x$USERNAME" ]; then

@@ -31,7 +31,7 @@ EOM
 }
 
 #Show the current directory
-echo "Directory=$PWD"
+echo "Docker Release Directory=$PWD"
 
 #DEFAULT TO DEV
 TYPE="DEV"
