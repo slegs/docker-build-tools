@@ -1,6 +1,6 @@
 # Build tools for Dockerfile and git
 
-* Updates Dockerfile
+* Automatic building of Dockerfile
 * Pushes to Docker repository
 * Updates Git source control
 * Inclues versioning
