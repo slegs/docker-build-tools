@@ -18,7 +18,7 @@ Call from build directory where your Dockerfile is located
 
 What it does
 1. Up versions your version number (x.x.x) in VERSION file by major, minor or patch. Uses docker image treeder/bump
-2. Pulls, coomits and pushes latest git changes and versions
+2. Pulls, commits and pushes latest git changes and versions
 3. Builds Docker image and tags with versions and stable for PROD versions and dev for DEV versions. Depends on dbuild.sh
 4. Pushes Docker image to linked Docker repository mapping latest tag to latest stable or test to latest dev release
 
