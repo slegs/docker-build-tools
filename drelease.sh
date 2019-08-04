@@ -1,5 +1,35 @@
 #!/bin/bash
 
+function usage {
+	cat <<EOM
+
+Docker and Git Release tool for Docker Images by Paul Walsh
+
+Create symbolic links for 
+- drelease.sh to /usr/local/bin/drelease
+- dbuild.sh to /usr/local/bin/dbuild
+
+Call from build directory where your Dockerfile is located
+
+What it does
+1. Up versions your version number (x.x.x) in VERSION file by major, minor or patch. Uses docker image treeder/bump
+2. Pulls, coomits and pushes latest git changes and versions
+3. Builds Docker image and tags with versions and stable for PROD versions and dev for DEV versions. Depends on dbuild.sh
+4. Pushes Docker image to linked Docker repository mapping latest tag to latest stable or test to latest dev release
+
+Usage: $(basename "$0") [OPTION]...
+
+  -u VALUE    Docker username (required)
+  -i VALUE    Docker image name (required)
+  -v VALUE    version type - major, minor or patch (default)
+  -p          indicates production release. Labels Docker version tag as stable
+              if not set then will label version as dev release
+  -h          display help
+
+EOM
+
+}
+
 #Show the current directory
 echo "Directory=$PWD"
 
@@ -7,8 +37,9 @@ echo "Directory=$PWD"
 TYPE="DEV"
 VERSION_TYPE="patch"
 
+
 # GET OPTIONS
-while getopts ":u:i:v:p" opt; do
+while getopts ":u:i:v:ph" opt; do
   case $opt in
     u) USERNAME="$OPTARG"
     ;;
@@ -18,25 +49,34 @@ while getopts ":u:i:v:p" opt; do
     ;;
     i) IMAGE="$OPTARG"
     ;;
-    \?) echo "An invalid option has been entered: $OPTARG"
-        exit 1
+    h) usage
+       exit 0
     ;;
-    :)  echo "The additional argument for option $OPTARG was omitted."
+    \?) usage
+        echo "An invalid option has been entered: $OPTARG"
+        echo 
+	exit 1
+    ;;
+    :)  usage
+        echo "The additional argument for option $OPTARG was omitted."
+        echo 
         exit 1
     ;;
   esac
 done
 
-echo "Parameters passed to release -u $USERNAME -i $IMAGE -v $VERSION_TYPE -p $TYPE"
-
 #Check Mandatory Options
 if [ "x" == "x$USERNAME" ]; then
+  usage
   echo "-u docker username is required"
+  echo 
   exit 1
 fi
 
 if [ "x" == "x$IMAGE" ]; then
+  usage
   echo "-i docker image name is required"
+  echo 
   exit 1
 fi
 
@@ -51,7 +91,7 @@ VERSION_NO=`cat VERSION`
 echo "version: $VERSION_NO"
 
 # run build
-./dbuild.sh -u $USERNAME -i $IMAGE -t $TYPE -v $VERSION_NO
+dbuild -u $USERNAME -i $IMAGE -t $TYPE -v $VERSION_NO
 
 if [ $? -eq 0 ]
 then
@@ -64,7 +104,7 @@ then
 	git push --tags
 
 
-	# if release then push stable and latest else dev
+	# if PROD release then push stable and latest else dev
 	if [ "$TYPE" == "PROD" ] ; then
 
 		docker tag $USERNAME/$IMAGE:latest $USERNAME/$IMAGE:$VERSION_NO

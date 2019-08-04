@@ -1,6 +1,35 @@
 #!/bin/bash
 
-#set -ex
+function usage {
+        cat <<EOM
+
+Docker and Git Build tool for Docker Images by Paul Walsh
+
+Create symbolic links for 
+- drelease.sh to /usr/local/bin/drelease
+- dbuild.sh to /usr/local/bin/dbuild   
+
+Call from build directory where your Dockerfile is located
+
+What it does
+- Builds Docker image and tags with versions and stable for PROD versions and dev for DEV versions
+- Optionally runs the built image in Docker
+
+Usage: $(basename "$0") [OPTION]...
+
+  -u VALUE    Docker username (required)
+  -i VALUE    Docker image name (required)
+  -v VALUE    version number (required)
+  -t VALUE    build type. 
+              if set to PROD will create build with tag stable-x.x.x and latest
+              else will assume DEV and create build with tag dev-x.x.x and test
+  -r          runs the build in Docker
+  -h          display help
+
+EOM
+
+}
+
 
 #Show the current directory
 echo "Directory=$PWD"
@@ -9,7 +38,7 @@ echo "Directory=$PWD"
 TYPE="DEV"
 RUN_BUILD="NO"
 
-while getopts ":u:v:t:i:r" opt; do
+while getopts ":u:v:t:i:rh" opt; do
   case $opt in
     u) USERNAME="$OPTARG"
     ;;
@@ -21,10 +50,17 @@ while getopts ":u:v:t:i:r" opt; do
     ;;
     r) RUN_BUILD="YES"
     ;;
-    \?) echo "An invalid option has been entered: $OPTARG"
+    h) usage
+       exit 0
+    ;;
+    \?) usage
+        echo "An invalid option has been entered: $OPTARG"
+        echo
         exit 1
     ;;
-    :)  echo "The additional argument for option $OPTARG was omitted."
+    :)  usage
+        echo "The additional argument for option $OPTARG was omitted."
+        echo
         exit 1
     ;;
   esac
@@ -34,17 +70,23 @@ echo "-u $USERNAME -v $VERSION -t $TYPE -i $IMAGE -r $RUN_BUILD"
 
 #Check Mandatory Options
 if [ "x" == "x$USERNAME" ]; then
+  usage
   echo "-u docker username is required"
+  echo
   exit 1
 fi
 
 if [ "x" == "x$IMAGE" ]; then
+  usage
   echo "-i docker image name is required"
+  echo
   exit 1
 fi
 
 if [ "x" == "x$VERSION" ]; then
+  usage
   echo "-i docker version is required"
+  echo
   exit 1
 fi
 
