@@ -1,4 +1,4 @@
-# Build tools for docker file and git
+# Build tools for Dockerfile and git
 
 * Updates Dockerfile
 * Pushes to Docker repository
