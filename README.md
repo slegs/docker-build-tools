@@ -5,7 +5,7 @@
 * Updates Git source control
 * Inclues versioning
 
-###drelease.sh
+### drelease.sh
 
 ```
 Docker and Git Release tool for Docker Images by Paul Walsh
@@ -34,7 +34,7 @@ Usage: drelease [OPTION]...
 
 ```
 
-###dbuild.sh
+### dbuild.sh
 
 ```
 Docker and Git Build tool for Docker Images by Paul Walsh
