@@ -3,9 +3,9 @@
 function usage {
 	cat <<EOM
 
-Docker and Git Release tool for Docker Images by Paul Walsh
+Docker and Git Release tool for Docker Images
 
-Create symbolic links for 
+Create symbolic links for
 - drelease.sh to /usr/local/bin/drelease
 - dbuild.sh to /usr/local/bin/dbuild
 
@@ -54,12 +54,12 @@ while getopts ":u:i:v:ph" opt; do
     ;;
     \?) usage
         echo "An invalid option has been entered: $OPTARG"
-        echo 
+        echo
 	exit 1
     ;;
     :)  usage
         echo "The additional argument for option $OPTARG was omitted."
-        echo 
+        echo
         exit 1
     ;;
   esac
@@ -69,14 +69,14 @@ done
 if [ "x" == "x$USERNAME" ]; then
   usage
   echo "-u docker username is required"
-  echo 
+  echo
   exit 1
 fi
 
 if [ "x" == "x$IMAGE" ]; then
   usage
   echo "-i docker image name is required"
-  echo 
+  echo
   exit 1
 fi
 
@@ -85,7 +85,7 @@ fi
 git pull
 
 # bump version
-docker run --rm -v "$PWD":/app treeder/bump $VERSION_TYPE 
+docker run --rm -v "$PWD":/app treeder/bump $VERSION_TYPE
 
 VERSION_NO=`cat VERSION`
 echo "version: $VERSION_NO"
@@ -108,21 +108,21 @@ then
 	if [ "$TYPE" == "PROD" ] ; then
 
 		docker tag $USERNAME/$IMAGE:latest $USERNAME/$IMAGE:$VERSION_NO
-		# push it
+		# push to docker repository
 		docker push $USERNAME/$IMAGE:latest
 
-	        docker tag $USERNAME/$IMAGE:stable-$VERSION_NO $USERNAME/$IMAGE:$VERSION_NO
-	        # push it
-	        docker push $USERNAME/$IMAGE:stable-$VERSION_NO
+    docker tag $USERNAME/$IMAGE:stable-$VERSION_NO $USERNAME/$IMAGE:$VERSION_NO
+		# push to docker repository
+    docker push $USERNAME/$IMAGE:stable-$VERSION_NO
 
 	else
-                docker tag $USERNAME/$IMAGE:test $USERNAME/$IMAGE:$VERSION_NO
-                # push it
-                docker push $USERNAME/$IMAGE:test
+    docker tag $USERNAME/$IMAGE:test $USERNAME/$IMAGE:$VERSION_NO
+		# push to docker repository
+    docker push $USERNAME/$IMAGE:test
 
-	        docker tag $USERNAME/$IMAGE:dev-$VERSION_NO $USERNAME/$IMAGE:$VERSION_NO
-	        # push it
-	        docker push $USERNAME/$IMAGE:dev-$VERSION_NO
+    docker tag $USERNAME/$IMAGE:dev-$VERSION_NO $USERNAME/$IMAGE:$VERSION_NO
+		# push to docker repository
+    docker push $USERNAME/$IMAGE:dev-$VERSION_NO
 
 	fi
 
