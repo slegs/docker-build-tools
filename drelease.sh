@@ -93,10 +93,10 @@ echo "version: $VERSION_NO"
 #Update Version Number in Readme and Dockerfile
 if [ "$TYPE" == "PROD" ] ; then
 	sed -i 's/LATEST_STABLE/stable-'"$VERSION_NO"'/g' README.md
-	sed -i 's/LATEST_STABLE/stable-'"$VERSION_NO"'/g' Dockerfile
+	sed -i 's/LABEL_VERSION/stable-'"$VERSION_NO"'/g' Dockerfile
 else
 	sed -i 's/LATEST_DEV/dev-'"$VERSION_NO"'/g' README.md
-	sed -i 's/LATEST_DEV/dev-'"$VERSION_NO"'/g' Dockerfile
+	sed -i 's/LABEL_VERSION/dev-'"$VERSION_NO"'/g' Dockerfile
 fi
 
 # run build
