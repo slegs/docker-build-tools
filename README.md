@@ -19,7 +19,7 @@
 What it does
 * Up versions your version number (x.x.x) in VERSION file by major, minor or patch. Uses docker image treeder/bump
 * Pulls, commits and pushes latest git changes and versions
-* Builds Docker image and tags with versions for stable and dev versions. Depends on dbuild (needs symbolic link to dbuild.sh) for buidling Docker image.
+* Builds Docker image and tags with versions for stable and dev versions. Depends on dbuild for buidling Docker image.
 * Pushes Docker image to linked Docker repository mapping latest tag to latest stable or test tag to latest dev
 
 ```
@@ -45,11 +45,7 @@ What it does
 ```
 Docker and Git Build tool for Docker Images
 
-What it does
-- Builds Docker image and tags with version label passed in argument
-- Optionally runs the built image in Docker
-
-Usage: $(basename "$0") [OPTION]...
+Usage: dbuild [OPTION]...
 
   -u VALUE    Docker username (required)
   -i VALUE    Docker image name (required)
