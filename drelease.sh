@@ -81,9 +81,9 @@ echo "version: $FULL_VERSION_LABEL"
 
 #Update Version Number in Readme
 if [ "$TYPE" == "stable" ] ; then
-	sed -i 's/:latest is .*/:latest is '"${FULL_VERSION_LABEL}"'/g' README.md
+	sed -i 's/:latest is.*/:latest is '"${FULL_VERSION_LABEL}"'/g' README.md
 else
-	sed -i 's/:test is .*/:test is '"${FULL_VERSION_LABEL}"'/g' README.md
+	sed -i 's/:test is.*/:test is '"${FULL_VERSION_LABEL}"'/g' README.md
 fi
 
 # run build
