@@ -12,7 +12,7 @@ Create symbolic links for
 Call from build directory where your Dockerfile is located
 
 What it does
-- Builds Docker image and tags with versions and stable for PROD versions and dev for DEV versions
+- Builds Docker image and tags with version number along with stable or dev identifier
 - Optionally runs the built image in Docker
 
 Usage: $(basename "$0") [OPTION]...
