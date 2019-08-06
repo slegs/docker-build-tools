@@ -94,7 +94,7 @@ echo "version: $VERSION_NO"
 if [ "$TYPE" == "PROD" ] ; then
 	sed -i 's/Stable Version=.*/Stable Version=stable-'"$VERSION_NO"'/g' README.md
 else
-	sed -i 's/Dev Version=.*/dev-'"$VERSION_NO"'/g' README.md
+	sed -i 's/Dev Version=.*/Dev Version=dev-'"$VERSION_NO"'/g' README.md
 fi
 
 # run build
