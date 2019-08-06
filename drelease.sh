@@ -90,13 +90,11 @@ docker run --rm -v "$PWD":/app treeder/bump $VERSION_TYPE
 VERSION_NO=`cat VERSION`
 echo "version: $VERSION_NO"
 
-#Update Version Number in Readme and Dockerfile
+#Update Version Number in Readme
 if [ "$TYPE" == "PROD" ] ; then
-	sed -i 's/LATEST_STABLE/stable-'"$VERSION_NO"'/g' README.md
-	sed -i 's/LABEL_VERSION/stable-'"$VERSION_NO"'/g' Dockerfile
+	sed -i 's/Stable Version=.*/Stable Version=stable-'"$VERSION_NO"'/g' README.md
 else
-	sed -i 's/LATEST_DEV/dev-'"$VERSION_NO"'/g' README.md
-	sed -i 's/LABEL_VERSION/dev-'"$VERSION_NO"'/g' Dockerfile
+	sed -i 's/Dev Version=.*/dev-'"$VERSION_NO"'/g' README.md
 fi
 
 # run build
