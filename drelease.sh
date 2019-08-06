@@ -91,11 +91,11 @@ VERSION_NO=`cat VERSION`
 echo "version: $VERSION_NO"
 
 #Update Version Number in Readme
-if [ "$TYPE" == "PROD" ] ; then
-	sed -i 's/Stable Version=.*/Stable Version=stable-'"$VERSION_NO"'/g' README.md
-else
-	sed -i 's/Dev Version=.*/Dev Version=dev-'"$VERSION_NO"'/g' README.md
-fi
+#if [ "$TYPE" == "PROD" ] ; then
+#	sed -i 's/Stable Version=.*/Stable Version=stable-'"$VERSION_NO"'/g' README.md
+#else
+#	sed -i 's/Dev Version=.*/Dev Version=dev-'"$VERSION_NO"'/g' README.md
+#fi
 
 # run build
 dbuild -u $USERNAME -i $IMAGE -t $TYPE -v $VERSION_NO
