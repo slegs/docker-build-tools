@@ -14,7 +14,7 @@ Call from build directory where your Dockerfile is located
 What it does
 1. Up versions your version number (x.x.x) in VERSION file by major, minor or patch. Uses docker image treeder/bump
 2. Pulls, commits and pushes latest git changes and versions
-3. Builds Docker image and tags with versions and stable for PROD versions and dev for DEV versions. Depends on dbuild.sh
+3. Builds Docker image and tags with versions for stable and dev versions. Depends on dbuild.sh
 4. Pushes Docker image to linked Docker repository mapping latest tag to latest stable or test to latest dev release
 
 Usage: $(basename "$0") [OPTION]...
@@ -22,7 +22,7 @@ Usage: $(basename "$0") [OPTION]...
   -u VALUE    Docker username (required)
   -i VALUE    Docker image name (required)
   -v VALUE    version type - major, minor or patch (default)
-  -p          indicates production release. Labels Docker version tag as stable
+  -s          indicates stable release. Labels Docker version tag as stable
               if not set then will label version as dev release
   -h          display help
 
@@ -34,16 +34,16 @@ EOM
 echo "Docker Release Directory=$PWD"
 
 #DEFAULT TO DEV
-TYPE="DEV"
+TYPE="dev"
 VERSION_TYPE="patch"
 
 
 # GET OPTIONS
-while getopts ":u:i:v:ph" opt; do
+while getopts ":u:i:v:sh" opt; do
   case $opt in
     u) USERNAME="$OPTARG"
     ;;
-    p) TYPE="PROD"
+    s) TYPE="stable"
     ;;
     v) VERSION_TYPE="$OPTARG"
     ;;
@@ -90,46 +90,41 @@ docker run --rm -v "$PWD":/app treeder/bump $VERSION_TYPE
 VERSION_NO=`cat VERSION`
 echo "version: $VERSION_NO"
 
+FULL_VERSION_LABEL="$TYPE-$VERSION_NO"
+
 #Update Version Number in Readme
-#if [ "$TYPE" == "PROD" ] ; then
-#	sed -i 's/Stable Version=.*/Stable Version=stable-'"$VERSION_NO"'/g' README.md
-#else
-#	sed -i 's/Dev Version=.*/Dev Version=dev-'"$VERSION_NO"'/g' README.md
-#fi
+if [ "$TYPE" == "stable" ] ; then
+	sed -i 's/Stable Version=.*/Stable Version='"$FULL_VERSION_LABEL"'/g' README.md
+else
+	sed -i 's/Dev Version=.*/Dev Version='"$FULL_VERSION_LABEL"'/g' README.md
+fi
 
 # run build
-dbuild -u $USERNAME -i $IMAGE -t $TYPE -v $VERSION_NO
+dbuild -u $USERNAME -i $IMAGE -t $TYPE -v $FULL_VERSION_LABEL
 
 if [ $? -eq 0 ]
 then
 
 	# tag it
 	git add -A
-	git commit -m "version $VERSION_NO"
-	git tag -a "$VERSION_NO" -m "version $VERSION_NO"
+	git commit -m "version $FULL_VERSION_LABEL"
+	git tag -a "$FULL_VERSION_LABEL" -m "version $FULL_VERSION_LABEL"
 	git push
 	git push --tags
 
 
-	# if PROD release then push stable and latest else dev
-	if [ "$TYPE" == "PROD" ] ; then
+	docker push $USERNAME/$IMAGE:$FULL_VERSION_LABEL
+	# if stable type then push stable and latest else test
+	if [ "$TYPE" == "stable" ] ; then
 
-		docker tag $USERNAME/$IMAGE:latest $USERNAME/$IMAGE:$VERSION_NO
+		docker tag $USERNAME/$IMAGE:$FULL_VERSION_LABEL $USERNAME/$IMAGE:latest
 		# push to docker repository
 		docker push $USERNAME/$IMAGE:latest
 
-    docker tag $USERNAME/$IMAGE:stable-$VERSION_NO $USERNAME/$IMAGE:$VERSION_NO
-		# push to docker repository
-    docker push $USERNAME/$IMAGE:stable-$VERSION_NO
-
 	else
-    docker tag $USERNAME/$IMAGE:test $USERNAME/$IMAGE:$VERSION_NO
+    docker tag $USERNAME/$IMAGE:$FULL_VERSION_LABEL $USERNAME/$IMAGE:test
 		# push to docker repository
     docker push $USERNAME/$IMAGE:test
-
-    docker tag $USERNAME/$IMAGE:dev-$VERSION_NO $USERNAME/$IMAGE:$VERSION_NO
-		# push to docker repository
-    docker push $USERNAME/$IMAGE:dev-$VERSION_NO
 
 	fi
 

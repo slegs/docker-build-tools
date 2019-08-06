@@ -19,11 +19,7 @@ Usage: $(basename "$0") [OPTION]...
 
   -u VALUE    Docker username (required)
   -i VALUE    Docker image name (required)
-  -v VALUE    version number (required)
-  -t VALUE    build type.
-              if set to PROD will create build with tag stable-x.x.x and latest
-              else will assume DEV and create build with tag dev-x.x.x and test
-  -r          runs the build in Docker
+  -v VALUE    version label (required)
   -h          display help
 
 EOM
@@ -43,8 +39,6 @@ while getopts ":u:v:t:i:rh" opt; do
     u) USERNAME="$OPTARG"
     ;;
     v) VERSION="$OPTARG"
-    ;;
-    t) TYPE="$OPTARG"
     ;;
     i) IMAGE="$OPTARG"
     ;;
@@ -83,27 +77,19 @@ fi
 
 if [ "x" == "x$VERSION" ]; then
   usage
-  echo "-i docker version is required"
+  echo "-i version label is required"
   echo
   exit 1
 fi
 
 
-if [ "$TYPE" == "PROD" ] ; then
 
-	docker build -t $USERNAME/$IMAGE:stable-$VERSION -t $USERNAME/$IMAGE:latest .
-
-	if [ "$RUN_BUILD" == "YES" ] ; then
-    docker run $USERNAME/$IMAGE:stable-$VERSION
-	fi
-
-else
-
-  docker build -t $USERNAME/$IMAGE:dev-$VERSION -t $USERNAME/$IMAGE:test .
+  docker build -t $USERNAME/$IMAGE:$VERSION  .
 
   if [ "$RUN_BUILD" == "YES" ] ; then
-    docker run $USERNAME/$IMAGE:dev-$VERSION
-	fi
+    docker run $USERNAME/$IMAGE:$VERSION
+  fi
+
 
 fi
 
