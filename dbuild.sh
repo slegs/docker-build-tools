@@ -5,16 +5,6 @@ function usage {
 
 Docker and Git Build tool for Docker Images
 
-Create symbolic links for
-- drelease.sh to /usr/local/bin/drelease
-- dbuild.sh to /usr/local/bin/dbuild
-
-Call from build directory where your Dockerfile is located
-
-What it does
-- Builds Docker image and tags with version number along with stable or dev identifier
-- Optionally runs the built image in Docker
-
 Usage: $(basename "$0") [OPTION]...
 
   -u VALUE    Docker username (required)
