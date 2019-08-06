@@ -10,6 +10,7 @@ Usage: $(basename "$0") [OPTION]...
   -u VALUE    Docker username (required)
   -i VALUE    Docker image name (required)
   -v VALUE    version label (required)
+  -r          run the newly built image
   -h          display help
 
 EOM

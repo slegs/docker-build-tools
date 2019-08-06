@@ -45,12 +45,6 @@ What it does
 ```
 Docker and Git Build tool for Docker Images
 
-Create symbolic links for
-- drelease.sh to /usr/local/bin/drelease
-- dbuild.sh to /usr/local/bin/dbuild
-
-Call from build directory where your Dockerfile is located
-
 What it does
 - Builds Docker image and tags with version label passed in argument
 - Optionally runs the built image in Docker
@@ -60,6 +54,7 @@ Usage: $(basename "$0") [OPTION]...
   -u VALUE    Docker username (required)
   -i VALUE    Docker image name (required)
   -v VALUE    version label (required)
+  -r          run the newly built image
   -h          display help
 
 
