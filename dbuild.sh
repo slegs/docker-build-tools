@@ -11,6 +11,7 @@ Usage: $(basename "$0") [OPTION]...
   -i VALUE    Docker image name (required)
   -v VALUE    version label (required)
   -r          run the newly built image
+  -e          test envrionment variables as one string
   -h          display help
 
 EOM
@@ -25,13 +26,15 @@ echo "Docker Build Directory=$PWD"
 TYPE="DEV"
 RUN_BUILD="NO"
 
-while getopts ":u:v:t:i:rh" opt; do
+while getopts ":u:v:t:i:e:rh" opt; do
   case $opt in
     u) USERNAME="$OPTARG"
     ;;
     v) VERSION="$OPTARG"
     ;;
     i) IMAGE="$OPTARG"
+    ;;
+    e) ENVIRON="$OPTARG"
     ;;
     r) RUN_BUILD="YES"
     ;;
@@ -78,7 +81,12 @@ fi
   docker build -t $USERNAME/$IMAGE:$VERSION  .
 
   if [ "$RUN_BUILD" == "YES" ] ; then
-    docker run $USERNAME/$IMAGE:$VERSION
+    if [ "x" == "x$ENVIRON" ]; then
+      docker run $USERNAME/$IMAGE:$VERSION
+    else
+      echo "docker run $USERNAME/$IMAGE:$VERSION -e $ENVIRON"
+      docker run $USERNAME/$IMAGE:$VERSION -e $ENVIRON
+    fi
   fi
 
 
